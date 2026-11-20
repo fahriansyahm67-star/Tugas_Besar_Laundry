@@ -1,26 +1,28 @@
 import streamlit as st
+import streamlit.components.v1 as components
 import base64
 import os
 
-# =====================================================
+
+# =========================================================
 # KONFIGURASI HALAMAN
-# =====================================================
+# =========================================================
 
 st.set_page_config(
-    page_title="Laundry Kiloan",
+    page_title="Aplikasi Biaya Laundry",
     page_icon="⚡",
     layout="wide"
 )
 
-# =====================================================
+
+# =========================================================
 # FUNGSI MEMBACA GAMBAR
-# =====================================================
+# =========================================================
 
-def image_to_base64(path):
-    if os.path.exists(path):
-        with open(path, "rb") as file:
+def image_to_base64(filename):
+    if os.path.exists(filename):
+        with open(filename, "rb") as file:
             return base64.b64encode(file.read()).decode()
-
     return None
 
 
@@ -28,470 +30,137 @@ zenitsu1 = image_to_base64("zenitsu1.jpg")
 zenitsu2 = image_to_base64("zenitsu2.jpg")
 
 
-# =====================================================
-# CSS / TAMPILAN / ANIMASI
-# =====================================================
+# =========================================================
+# CSS STREAMLIT
+# =========================================================
 
 st.markdown("""
 <style>
 
-/* ================================
-   BACKGROUND
-================================ */
+/* ==============================
+   BACKGROUND APLIKASI
+============================== */
 
 .stApp {
     background:
         radial-gradient(
             circle at 80% 20%,
-            rgba(255, 193, 7, 0.18),
+            rgba(255, 193, 7, 0.15),
             transparent 35%
         ),
         linear-gradient(
             135deg,
             #050505 0%,
-            #101010 50%,
-            #251700 100%
+            #111111 50%,
+            #241700 100%
         );
 
     color: white;
 }
 
 
-/* ================================
+/* ==============================
    CONTAINER
-================================ */
+============================== */
 
 .block-container {
     max-width: 1400px;
-    padding-top: 2rem;
+    padding-top: 1.5rem;
+    padding-bottom: 3rem;
 }
 
 
-/* ================================
+/* ==============================
    JUDUL
-================================ */
+============================== */
 
-.title-box {
+.main-title {
     text-align: center;
-    margin-bottom: 25px;
+    font-size: 42px;
+    font-weight: 900;
 
-    animation:
-        glowTitle 2s ease-in-out infinite alternate;
-}
+    color: #ffd000;
 
-.title {
-    font-size: 44px;
-    font-weight: 1000;
+    text-shadow:
+        0 0 10px rgba(255, 193, 7, 0.7),
+        0 0 25px rgba(255, 193, 7, 0.4);
 
-    background:
-        linear-gradient(
-            90deg,
-            #ffffff,
-            #ffd000,
-            #ffffff,
-            #ff9800
-        );
-
-    background-size: 300% auto;
-
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-
-    animation:
-        textMove 5s linear infinite;
+    animation: titleGlow 2s infinite alternate;
 }
 
 .subtitle {
-    color: #cccccc;
+    text-align: center;
+    color: #dddddd;
     font-size: 16px;
+    margin-bottom: 20px;
 }
 
-
-/* ================================
-   ANIMASI JUDUL
-================================ */
-
-@keyframes textMove {
-
-    0% {
-        background-position: 0% center;
-    }
-
-    100% {
-        background-position: 300% center;
-    }
-
-}
-
-@keyframes glowTitle {
-
+@keyframes titleGlow {
     from {
-        filter:
-            drop-shadow(
-                0 0 5px rgba(255,193,7,0.3)
-            );
+        text-shadow:
+            0 0 8px rgba(255, 193, 7, 0.4);
     }
 
     to {
-        filter:
-            drop-shadow(
-                0 0 25px rgba(255,193,7,0.9)
-            );
+        text-shadow:
+            0 0 30px rgba(255, 193, 7, 1);
     }
-
 }
 
 
-/* ================================
-   ZENITSU CONTAINER
-================================ */
+/* ==============================
+   PANEL DATA
+============================== */
 
-.zenitsu-container {
-
-    position: relative;
-
-    height: 560px;
-
-    overflow: hidden;
-
-    border-radius: 25px;
+.data-panel {
+    background:
+        rgba(10, 10, 10, 0.85);
 
     border:
-        2px solid rgba(255,193,7,0.55);
-
-    background: #050505;
-
-    box-shadow:
-        0 0 35px rgba(255,193,7,0.25);
-
-}
-
-
-/* ================================
-   GAMBAR BACKGROUND
-================================ */
-
-.zenitsu1 {
-
-    position: absolute;
-
-    width: 100%;
-    height: 100%;
-
-    object-fit: cover;
-
-    opacity: 0.75;
-
-    animation:
-        zoomMove 8s ease-in-out infinite alternate;
-
-}
-
-
-/* ================================
-   GAMBAR ZENITSU 2
-================================ */
-
-.zenitsu2 {
-
-    position: absolute;
-
-    width: 58%;
-
-    max-height: 100%;
-
-    right: -30px;
-
-    bottom: -25px;
-
-    object-fit: contain;
-
-    filter:
-        drop-shadow(
-            0 0 15px rgba(255,193,7,0.8)
-        );
-
-    animation:
-        floatZenitsu 3s ease-in-out infinite,
-        glowZenitsu 1.5s ease-in-out infinite alternate;
-
-}
-
-
-/* ================================
-   ZOOM BACKGROUND
-================================ */
-
-@keyframes zoomMove {
-
-    0% {
-        transform:
-            scale(1)
-            translateX(0px);
-    }
-
-    100% {
-        transform:
-            scale(1.12)
-            translateX(-10px);
-    }
-
-}
-
-
-/* ================================
-   GERAK ZENITSU
-================================ */
-
-@keyframes floatZenitsu {
-
-    0% {
-        transform:
-            translateY(0px);
-    }
-
-    50% {
-        transform:
-            translateY(-12px);
-    }
-
-    100% {
-        transform:
-            translateY(0px);
-    }
-
-}
-
-
-/* ================================
-   GLOW ZENITSU
-================================ */
-
-@keyframes glowZenitsu {
-
-    from {
-        filter:
-            drop-shadow(
-                0 0 10px rgba(255,193,7,0.4)
-            );
-    }
-
-    to {
-        filter:
-            drop-shadow(
-                0 0 35px rgba(255,193,7,1)
-            );
-    }
-
-}
-
-
-/* ================================
-   EFEK PETIR
-================================ */
-
-.lightning {
-
-    position: absolute;
-
-    width: 100%;
-    height: 100%;
-
-    pointer-events: none;
-
-    background:
-        linear-gradient(
-            115deg,
-            transparent 20%,
-            transparent 40%,
-            rgba(255,193,7,0.55) 50%,
-            transparent 60%,
-            transparent 80%
-        );
-
-    background-size: 250% 250%;
-
-    animation:
-        lightningMove 3s linear infinite;
-
-    mix-blend-mode: screen;
-
-}
-
-
-/* ================================
-   ANIMASI PETIR
-================================ */
-
-@keyframes lightningMove {
-
-    0% {
-        opacity: 0;
-        background-position: 100% 0%;
-    }
-
-    40% {
-        opacity: 0;
-    }
-
-    45% {
-        opacity: 1;
-    }
-
-    48% {
-        opacity: 0.15;
-    }
-
-    50% {
-        opacity: 1;
-    }
-
-    53% {
-        opacity: 0.1;
-    }
-
-    60% {
-        opacity: 0;
-    }
-
-    100% {
-        background-position: 0% 100%;
-        opacity: 0;
-    }
-
-}
-
-
-/* ================================
-   PARTIKEL
-================================ */
-
-.spark {
-
-    position: absolute;
-
-    width: 5px;
-    height: 5px;
-
-    background: #ffd000;
-
-    border-radius: 50%;
-
-    box-shadow:
-        0 0 10px #ffd000,
-        0 0 25px #ff9800;
-
-    animation:
-        sparkMove 2s infinite;
-
-}
-
-.spark1 {
-    left: 15%;
-    top: 30%;
-    animation-delay: 0.2s;
-}
-
-.spark2 {
-    left: 35%;
-    top: 60%;
-    animation-delay: 0.8s;
-}
-
-.spark3 {
-    left: 65%;
-    top: 25%;
-    animation-delay: 1.2s;
-}
-
-.spark4 {
-    left: 80%;
-    top: 65%;
-    animation-delay: 1.7s;
-}
-
-
-@keyframes sparkMove {
-
-    0% {
-        opacity: 0;
-        transform:
-            translateY(20px)
-            scale(0.5);
-    }
-
-    50% {
-        opacity: 1;
-        transform:
-            translateY(-20px)
-            scale(1.5);
-    }
-
-    100% {
-        opacity: 0;
-        transform:
-            translateY(-50px)
-            scale(0.2);
-    }
-
-}
-
-
-/* ================================
-   PANEL
-================================ */
-
-.panel {
-
-    background:
-        rgba(15,15,15,0.88);
-
-    border:
-        1px solid rgba(255,193,7,0.4);
+        1px solid rgba(255, 193, 7, 0.5);
 
     border-radius: 20px;
 
     padding: 25px;
 
     box-shadow:
-        0 0 25px rgba(255,193,7,0.1);
+        0 0 25px rgba(255, 193, 7, 0.12);
 
+    margin-bottom: 15px;
 }
 
 
-/* ================================
+/* ==============================
    INPUT
-================================ */
+============================== */
 
 .stTextInput input,
 .stNumberInput input {
 
-    background:
-        #191919 !important;
+    background-color: #191919 !important;
 
-    color:
-        white !important;
+    color: white !important;
 
     border:
         1px solid #555 !important;
 
-    border-radius:
-        10px !important;
-
+    border-radius: 10px !important;
 }
 
 
-/* ================================
+/* ==============================
    BUTTON
-================================ */
+============================== */
 
 .stButton button {
 
     width: 100%;
 
+    min-height: 45px;
+
     border-radius: 12px;
 
-    min-height: 48px;
+    border: none;
 
     background:
         linear-gradient(
@@ -500,15 +169,14 @@ st.markdown("""
             #ff9800
         );
 
-    color: black;
+    color: #000000;
 
     font-weight: 900;
 
-    border: none;
-
-    transition: 0.2s;
-
+    transition:
+        all 0.2s ease;
 }
+
 
 .stButton button:hover {
 
@@ -517,69 +185,44 @@ st.markdown("""
         scale(1.02);
 
     box-shadow:
-        0 0 25px rgba(255,193,7,0.8);
-
+        0 0 25px rgba(255, 193, 7, 0.8);
 }
 
 
-/* ================================
+/* ==============================
    HASIL
-================================ */
+============================== */
 
-.result {
+.result-panel {
 
     background:
-        linear-gradient(
-            135deg,
-            rgba(35,30,10,0.95),
-            rgba(15,15,15,0.95)
-        );
+        rgba(10, 10, 10, 0.9);
 
     border:
-        1px solid rgba(255,193,7,0.45);
+        1px solid rgba(255, 193, 7, 0.5);
 
-    border-radius:
-        20px;
+    border-radius: 20px;
 
-    padding:
-        25px;
+    padding: 25px;
 
-    animation:
-        resultAppear 0.6s ease;
-
+    box-shadow:
+        0 0 25px rgba(255, 193, 7, 0.12);
 }
 
 
-@keyframes resultAppear {
+/* ==============================
+   TOTAL BAYAR
+============================== */
 
-    from {
-        opacity: 0;
-        transform:
-            translateY(20px);
-    }
-
-    to {
-        opacity: 1;
-        transform:
-            translateY(0);
-    }
-
-}
-
-
-/* ================================
-   TOTAL
-================================ */
-
-.total {
+.total-box {
 
     margin-top: 20px;
 
     padding: 20px;
 
-    text-align: center;
-
     border-radius: 18px;
+
+    text-align: center;
 
     background:
         linear-gradient(
@@ -591,188 +234,640 @@ st.markdown("""
     color: black;
 
     box-shadow:
-        0 0 35px rgba(255,193,7,0.65);
+        0 0 30px rgba(255, 193, 7, 0.7);
 
     animation:
         totalPulse 1.5s infinite alternate;
-
 }
 
 @keyframes totalPulse {
 
     from {
-        transform:
-            scale(1);
-
+        transform: scale(1);
         box-shadow:
-            0 0 15px rgba(255,193,7,0.4);
+            0 0 15px rgba(255, 193, 7, 0.4);
     }
 
     to {
-        transform:
-            scale(1.02);
-
+        transform: scale(1.02);
         box-shadow:
-            0 0 40px rgba(255,193,7,0.9);
+            0 0 40px rgba(255, 193, 7, 0.9);
     }
-
 }
 
 
-/* ================================
+/* ==============================
    FOOTER
-================================ */
+============================== */
 
 .footer {
-
     text-align: center;
-
-    color: #777;
-
+    color: #777777;
     margin-top: 30px;
-
+    font-size: 13px;
 }
 
 </style>
 """, unsafe_allow_html=True)
 
 
-# =====================================================
+# =========================================================
 # JUDUL
-# =====================================================
+# =========================================================
 
 st.markdown("""
-<div class="title-box">
-
-<div class="title">
+<div class="main-title">
 ⚡ APLIKASI BIAYA LAUNDRY KILOAN ⚡
 </div>
 
 <div class="subtitle">
 Hitung cepat biaya laundry dengan tema Thunder Zenitsu
 </div>
-
-</div>
 """, unsafe_allow_html=True)
 
 
-# =====================================================
+# =========================================================
 # ANIMASI ZENITSU
-# =====================================================
+# =========================================================
 
 if zenitsu1 and zenitsu2:
 
-    st.markdown(f"""
-    <div class="zenitsu-container">
+    html_zenitsu = f"""
+<!DOCTYPE html>
 
-        <img
-            class="zenitsu1"
-            src="data:image/jpeg;base64,{zenitsu1}"
-        >
+<html>
 
-        <div class="lightning"></div>
+<head>
 
-        <div class="spark spark1"></div>
-        <div class="spark spark2"></div>
-        <div class="spark spark3"></div>
-        <div class="spark spark4"></div>
+<style>
 
-        <img
-            class="zenitsu2"
-            src="data:image/jpeg;base64,{zenitsu2}"
-        >
+* {{
+    box-sizing: border-box;
+}}
+
+body {{
+    margin: 0;
+    padding: 0;
+    background: transparent;
+    overflow: hidden;
+}}
+
+.scene {{
+
+    position: relative;
+
+    width: 100%;
+    height: 560px;
+
+    overflow: hidden;
+
+    border-radius: 25px;
+
+    border: 2px solid rgba(255, 193, 7, 0.65);
+
+    background: #030303;
+
+    box-shadow:
+        0 0 25px rgba(255, 193, 7, 0.3),
+        inset 0 0 40px rgba(255, 193, 7, 0.08);
+}}
+
+
+/* =================================
+   BACKGROUND ZENITSU
+================================= */
+
+.background {{
+    position: absolute;
+
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+
+    opacity: 0.72;
+
+    transform: scale(1.02);
+
+    animation:
+        backgroundMove 8s ease-in-out infinite alternate;
+}}
+
+
+@keyframes backgroundMove {{
+
+    0% {{
+        transform:
+            scale(1.02)
+            translateX(0px);
+    }}
+
+    100% {{
+        transform:
+            scale(1.12)
+            translateX(-15px);
+    }}
+
+}}
+
+
+/* =================================
+   ZENITSU DEPAN
+================================= */
+
+.zenitsu {{
+    position: absolute;
+
+    width: 55%;
+
+    height: 100%;
+
+    right: -10px;
+
+    bottom: -20px;
+
+    object-fit: contain;
+
+    filter:
+        drop-shadow(
+            0 0 12px rgba(255, 193, 7, 0.7)
+        )
+        drop-shadow(
+            0 0 30px rgba(255, 170, 0, 0.4)
+        );
+
+    animation:
+        zenitsuFloat 3s ease-in-out infinite,
+        zenitsuGlow 1.5s ease-in-out infinite alternate;
+
+}}
+
+
+@keyframes zenitsuFloat {{
+
+    0% {{
+        transform:
+            translateY(0px);
+    }}
+
+    50% {{
+        transform:
+            translateY(-12px);
+    }}
+
+    100% {{
+        transform:
+            translateY(0px);
+    }}
+
+}}
+
+
+@keyframes zenitsuGlow {{
+
+    0% {{
+        filter:
+            drop-shadow(
+                0 0 8px rgba(255, 193, 7, 0.5)
+            );
+    }}
+
+    100% {{
+        filter:
+            drop-shadow(
+                0 0 35px rgba(255, 193, 7, 1)
+            );
+    }}
+
+}}
+
+
+/* =================================
+   PETIR
+================================= */
+
+.lightning {{
+    position: absolute;
+
+    top: 0;
+    right: 10%;
+
+    width: 4px;
+    height: 100%;
+
+    background:
+        linear-gradient(
+            to bottom,
+            transparent 0%,
+            #ffd000 25%,
+            #ffffff 45%,
+            #ffd000 60%,
+            transparent 100%
+        );
+
+    opacity: 0;
+
+    filter:
+        blur(1px)
+        drop-shadow(
+            0 0 12px #ffd000
+        );
+
+    transform:
+        rotate(12deg);
+
+    animation:
+        lightningFlash 3.5s infinite;
+}}
+
+
+@keyframes lightningFlash {{
+
+    0%, 38%, 45%, 100% {{
+        opacity: 0;
+    }}
+
+    39% {{
+        opacity: 1;
+    }}
+
+    40% {{
+        opacity: 0.1;
+    }}
+
+    41% {{
+        opacity: 1;
+    }}
+
+    43% {{
+        opacity: 0.2;
+    }}
+
+    44% {{
+        opacity: 1;
+    }}
+
+}}
+
+
+/* =================================
+   CAHAYA PETIR
+================================= */
+
+.flash {{
+    position: absolute;
+
+    inset: 0;
+
+    background:
+        rgba(255, 193, 7, 0.18);
+
+    opacity: 0;
+
+    animation:
+        screenFlash 3.5s infinite;
+}}
+
+
+@keyframes screenFlash {{
+
+    0%, 38%, 45%, 100% {{
+        opacity: 0;
+    }}
+
+    39% {{
+        opacity: 0.7;
+    }}
+
+    40% {{
+        opacity: 0.1;
+    }}
+
+    41% {{
+        opacity: 0.8;
+    }}
+
+    44% {{
+        opacity: 0;
+    }}
+
+}}
+
+
+/* =================================
+   PARTIKEL
+================================= */
+
+.spark {{
+    position: absolute;
+
+    width: 5px;
+    height: 5px;
+
+    border-radius: 50%;
+
+    background: #ffd000;
+
+    box-shadow:
+        0 0 8px #ffd000,
+        0 0 20px #ff9800;
+
+    opacity: 0;
+
+    animation:
+        sparkMove 2.5s infinite;
+}}
+
+
+.spark1 {{
+    left: 12%;
+    top: 65%;
+    animation-delay: 0.1s;
+}}
+
+.spark2 {{
+    left: 30%;
+    top: 40%;
+    animation-delay: 0.7s;
+}}
+
+.spark3 {{
+    left: 55%;
+    top: 25%;
+    animation-delay: 1.3s;
+}}
+
+.spark4 {{
+    left: 80%;
+    top: 50%;
+    animation-delay: 1.8s;
+}}
+
+.spark5 {{
+    left: 72%;
+    top: 75%;
+    animation-delay: 2.1s;
+}}
+
+
+@keyframes sparkMove {{
+
+    0% {{
+        opacity: 0;
+        transform:
+            translateY(30px)
+            scale(0.5);
+    }}
+
+    40% {{
+        opacity: 1;
+    }}
+
+    70% {{
+        opacity: 1;
+        transform:
+            translateY(-30px)
+            scale(1.4);
+    }}
+
+    100% {{
+        opacity: 0;
+        transform:
+            translateY(-70px)
+            scale(0.2);
+    }}
+
+}}
+
+
+/* =================================
+   TEKS DI ATAS GAMBAR
+================================= */
+
+.overlay {{
+    position: absolute;
+
+    left: 25px;
+    top: 25px;
+
+    z-index: 10;
+
+    color: white;
+
+    text-shadow:
+        0 0 10px black,
+        0 0 20px black;
+}}
+
+.overlay h2 {{
+    margin: 0;
+
+    color: #ffd000;
+
+    font-size: 27px;
+}}
+
+.overlay p {{
+    margin-top: 7px;
+
+    color: #eeeeee;
+
+    font-size: 14px;
+}}
+
+
+/* =================================
+   RESPONSIVE HP
+================================= */
+
+@media (max-width: 600px) {{
+
+    .scene {{
+        height: 470px;
+    }}
+
+    .zenitsu {{
+        width: 72%;
+        right: -20px;
+    }}
+
+    .overlay {{
+        left: 18px;
+        top: 18px;
+    }}
+
+    .overlay h2 {{
+        font-size: 21px;
+    }}
+
+    .overlay p {{
+        font-size: 12px;
+    }}
+
+}}
+
+</style>
+
+</head>
+
+
+<body>
+
+<div class="scene">
+
+    <img
+        class="background"
+        src="data:image/jpeg;base64,{zenitsu1}"
+    >
+
+    <div class="flash"></div>
+
+    <div class="lightning"></div>
+
+    <div class="spark spark1"></div>
+    <div class="spark spark2"></div>
+    <div class="spark spark3"></div>
+    <div class="spark spark4"></div>
+    <div class="spark spark5"></div>
+
+    <img
+        class="zenitsu"
+        src="data:image/jpeg;base64,{zenitsu2}"
+    >
+
+    <div class="overlay">
+
+        <h2>⚡ THUNDER LAUNDRY ⚡</h2>
+
+        <p>
+            Perhitungan biaya laundry dengan kekuatan petir
+        </p>
 
     </div>
-    """, unsafe_allow_html=True)
+
+</div>
+
+</body>
+
+</html>
+"""
+
+    components.html(
+        html_zenitsu,
+        height=580,
+        scrolling=False
+    )
 
 else:
 
-    st.warning(
-        "Gambar Zenitsu belum ditemukan. "
+    st.error(
+        "Gambar Zenitsu tidak ditemukan. "
         "Pastikan zenitsu1.jpg dan zenitsu2.jpg "
-        "berada di folder yang sama."
+        "berada di repository yang sama dengan file Python."
     )
 
+
+# =========================================================
+# JARAK
+# =========================================================
 
 st.write("")
 
 
-# =====================================================
-# FORM
-# =====================================================
+# =========================================================
+# FUNGSI RESET
+# =========================================================
 
-col1, col2 = st.columns(2)
+def reset_form():
+    st.session_state.nim = ""
+    st.session_state.berat = 0
 
 
-# =====================================================
+# =========================================================
+# LAYOUT DATA
+# =========================================================
+
+kolom1, kolom2 = st.columns(2)
+
+
+# =========================================================
 # INPUT DATA
-# =====================================================
+# =========================================================
 
-with col1:
+with kolom1:
 
     st.markdown("""
-    <div class="panel">
+    <div class="data-panel">
 
-    <h2 style="color:#ffd000;">
-    ⚡ DATA LAUNDRY
-    </h2>
+        <h2 style="color:#ffd000;">
+            ⚡ DATA LAUNDRY
+        </h2>
 
-    <p style="color:#aaa;">
-    Masukkan NIM dan berat cucian.
-    </p>
+        <p style="color:#aaaaaa;">
+            Masukkan NIM dan berat cucian.
+        </p>
 
     </div>
     """, unsafe_allow_html=True)
 
-    st.write("")
-
     nim = st.text_input(
         "NIM (10 digit)",
-        placeholder="Contoh: 1021261006"
+        placeholder="Contoh: 1021261006",
+        key="nim"
     )
 
-    # Dibuat bisa menerima negatif supaya
-    # skenario validasi tugas bisa diuji.
     berat = st.number_input(
         "Berat Cucian (kg)",
         min_value=-1000,
         max_value=1000,
         value=0,
-        step=1
+        step=1,
+        key="berat"
     )
 
     st.write("")
 
-    hitung = st.button(
-        "⚡ HITUNG BIAYA",
-        use_container_width=True
+    tombol1, tombol2 = st.columns(2)
+
+    with tombol1:
+
+        hitung = st.button(
+            "⚡ HITUNG",
+            use_container_width=True
+        )
+
+    with tombol2:
+
+        st.button(
+            "↻ RESET",
+            use_container_width=True,
+            on_click=reset_form
+        )
+
+
+# =========================================================
+# FUNGSI FORMAT RUPIAH
+# =========================================================
+
+def rupiah(nilai):
+
+    return (
+        "Rp "
+        + f"{nilai:,.0f}".replace(",", ".")
     )
 
-    reset = st.button(
-        "↻ RESET",
-        use_container_width=True
-    )
 
+# =========================================================
+# HASIL PERHITUNGAN
+# =========================================================
 
-# =====================================================
-# RESET
-# =====================================================
-
-if reset:
-    st.rerun()
-
-
-# =====================================================
-# HASIL
-# =====================================================
-
-with col2:
+with kolom2:
 
     if hitung:
 
-        # =============================================
+        # -----------------------------------------------
         # VALIDASI NIM
-        # =============================================
+        # -----------------------------------------------
 
         if len(nim) != 10 or not nim.isdigit():
 
@@ -780,9 +875,9 @@ with col2:
                 "❌ NIM harus terdiri dari tepat 10 digit angka."
             )
 
-        # =============================================
+        # -----------------------------------------------
         # VALIDASI BERAT
-        # =============================================
+        # -----------------------------------------------
 
         elif berat <= 0:
 
@@ -792,40 +887,50 @@ with col2:
 
         else:
 
-            # =========================================
-            # DATA NIM
-            # =========================================
+            # -------------------------------------------
+            # MENGHITUNG DIGIT
+            # -------------------------------------------
 
-            digit_nim = [
-                int(x)
-                for x in nim
-            ]
+            digit_terakhir = int(nim[-1])
 
-            digit_terakhir = digit_nim[-1]
+            jumlah_digit_genap = 0
 
-            jumlah_digit_genap = sum(
-                1
-                for x in digit_nim
-                if x % 2 == 0
-            )
+            for digit in nim:
 
-            # =========================================
-            # RUMUS
-            # =========================================
+                if int(digit) % 2 == 0:
+
+                    jumlah_digit_genap += 1
+
+
+            # -------------------------------------------
+            # TARIF PER KG
+            # -------------------------------------------
 
             tarif_per_kg = (
                 5000 +
                 (digit_terakhir * 500)
             )
 
-            persen_diskon = (
-                jumlah_digit_genap
-            )
+
+            # -------------------------------------------
+            # PERSEN DISKON
+            # -------------------------------------------
+
+            persen_diskon = jumlah_digit_genap
+
+
+            # -------------------------------------------
+            # BIAYA NORMAL
+            # -------------------------------------------
 
             biaya_normal = (
-                int(berat) *
-                tarif_per_kg
+                berat * tarif_per_kg
             )
+
+
+            # -------------------------------------------
+            # POTONGAN
+            # -------------------------------------------
 
             potongan = (
                 persen_diskon *
@@ -833,80 +938,79 @@ with col2:
                 100
             )
 
+
+            # -------------------------------------------
+            # TOTAL BAYAR
+            # -------------------------------------------
+
             total_bayar = (
                 biaya_normal -
                 potongan
             )
 
-            # =========================================
-            # FORMAT RUPIAH
-            # =========================================
 
-            def rupiah(nilai):
-
-                return (
-                    f"Rp {nilai:,.0f}"
-                    .replace(",", ".")
-                )
-
-            # =========================================
+            # -------------------------------------------
             # TAMPILKAN HASIL
-            # =========================================
+            # -------------------------------------------
 
             st.markdown(f"""
-            <div class="result">
+            <div class="result-panel">
 
-            <h2 style="color:#ffd000;">
-            ⚡ RINCIAN PERHITUNGAN
-            </h2>
+                <h2 style="color:#ffd000;">
+                    ⚡ RINCIAN PERHITUNGAN
+                </h2>
 
-            <p>
-            <b>NIM:</b> {nim}
-            </p>
+                <p>
+                    <b>NIM:</b> {nim}
+                </p>
 
-            <p>
-            <b>Berat cucian:</b>
-            {int(berat)} kg
-            </p>
+                <p>
+                    <b>Berat cucian:</b>
+                    {int(berat)} kg
+                </p>
 
-            <hr>
+                <hr>
 
-            <p>
-            💰 <b>Tarif per kg:</b>
-            {rupiah(tarif_per_kg)}
-            </p>
+                <p>
+                    💰 <b>Tarif per kg:</b>
+                    {rupiah(tarif_per_kg)}
+                </p>
 
-            <p>
-            🔢 <b>Jumlah digit genap:</b>
-            {jumlah_digit_genap} digit
-            </p>
+                <p>
+                    🔢 <b>Jumlah digit genap:</b>
+                    {jumlah_digit_genap} digit
+                </p>
 
-            <p>
-            ⚡ <b>Diskon:</b>
-            {persen_diskon}%
-            </p>
+                <p>
+                    ⚡ <b>Diskon:</b>
+                    {persen_diskon}%
+                </p>
 
-            <p>
-            💵 <b>Biaya normal:</b>
-            {rupiah(biaya_normal)}
-            </p>
+                <p>
+                    💵 <b>Biaya normal:</b>
+                    {rupiah(biaya_normal)}
+                </p>
 
-            <p>
-            ✂️ <b>Potongan:</b>
-            {rupiah(potongan)}
-            </p>
+                <p>
+                    ✂️ <b>Potongan:</b>
+                    {rupiah(potongan)}
+                </p>
 
             </div>
             """, unsafe_allow_html=True)
 
             st.markdown(f"""
-            <div class="total">
+            <div class="total-box">
 
                 <div style="font-size:16px;">
                     ⚡ TOTAL BAYAR
                 </div>
 
-                <div style="font-size:34px;font-weight:900;">
+                <div style="
+                    font-size:32px;
+                    font-weight:900;
+                    margin-top:5px;
+                ">
                     {rupiah(total_bayar)}
                 </div>
 
@@ -916,32 +1020,32 @@ with col2:
     else:
 
         st.markdown("""
-        <div class="result">
+        <div class="result-panel">
 
-        <h2 style="color:#ffd000;">
-        ⚡ RINCIAN PERHITUNGAN
-        </h2>
+            <h2 style="color:#ffd000;">
+                ⚡ RINCIAN PERHITUNGAN
+            </h2>
 
-        <p style="color:#999;">
-        Hasil perhitungan akan muncul di sini
-        setelah data dimasukkan.
-        </p>
+            <p style="color:#999999;">
+                Masukkan NIM dan berat cucian,
+                kemudian tekan tombol HITUNG.
+            </p>
 
-        <div style="
-            text-align:center;
-            font-size:80px;
-            padding:40px;
-        ">
-        ⚡
-        </div>
+            <div style="
+                text-align:center;
+                font-size:75px;
+                padding:35px 0;
+            ">
+                ⚡
+            </div>
 
         </div>
         """, unsafe_allow_html=True)
 
 
-# =====================================================
+# =========================================================
 # FOOTER
-# =====================================================
+# =========================================================
 
 st.markdown("""
 <div class="footer">
@@ -950,4 +1054,4 @@ st.markdown("""
 NIM: 1021261006
 
 </div>
-""", unsafe_allow_html=True)
+""", unsafe_allow_html=True) 
